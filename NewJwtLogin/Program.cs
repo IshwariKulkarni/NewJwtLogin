@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NewJwtLogin.Authentication;
+using NewJwtLogin.Repos;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ ConfigurationManager configuration = builder.Configuration;
 
 // For Entity Framework
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ConnStr")));
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 // For Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
