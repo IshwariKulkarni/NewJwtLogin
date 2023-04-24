@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NETCore.MailKit.Core;
+using NETCore.MailKit.Extensions;
+using NETCore.MailKit.Infrastructure.Internal;
 using NewJwtLogin.Authentication;
 using NewJwtLogin.Repos;
 using System.Text;
@@ -10,6 +13,13 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
+// Add email service
+builder.Services.AddMailKit(config =>
+{
+    config.UseMailKit(builder.Configuration.GetSection("EmailSettings").Get<MailKitOptions>());
+});
+
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 // For Entity Framework
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ConnStr")));

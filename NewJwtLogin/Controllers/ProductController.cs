@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NewJwtLogin.Dto;
 using NewJwtLogin.Models;
 using NewJwtLogin.Repos;
+using System.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace NewJwtLogin.Controllers
 {
+    //[Authorize(Roles = UserRoles.Admin)]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -19,18 +22,20 @@ namespace NewJwtLogin.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ProductDto>> GetAll()
+        public async Task<List<Product>> GetAll()
         {
             return await _productRepository.GetAllAsync();
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<Product> GetById(int id)
         {
             return await _productRepository.GetProductById(id);
         }
 
         [HttpPost]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> Create(ProductDto product)
         {
             await _productRepository.Create(product);
@@ -38,6 +43,7 @@ namespace NewJwtLogin.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> UpdateProduct(int id, ProductDto product)
         {
             /*            if (id != product.ProductId)
@@ -50,12 +56,14 @@ namespace NewJwtLogin.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             await _productRepository.DeleteAsync(id);
             return Ok();
         }
 
+        //[AllowAnonymous]
         [HttpGet("search/{ProductName}")]
         public async Task<ActionResult<IEnumerable<Product>>> Search(string ProductName)
         {

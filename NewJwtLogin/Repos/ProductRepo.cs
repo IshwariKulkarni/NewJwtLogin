@@ -8,7 +8,7 @@ namespace NewJwtLogin.Repos
     public interface IProductRepository
     {
         Task<Product> GetProductById(int id);
-        Task<IEnumerable<ProductDto>> GetAllAsync();
+        Task<List<Product>> GetAllAsync();
         Task<Product> Create(ProductDto product);
         Task UpdateProduct(int id, ProductDto prod);
         Task DeleteAsync(int id);
@@ -31,9 +31,9 @@ namespace NewJwtLogin.Repos
             return await _dbContext.products.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync()
+        public async Task<List<Product>> GetAllAsync()
         {
-            return await _dbContext.Set<Product>().ToListAsync();
+            return await _dbContext.products.ToListAsync();
         }
 
         public async Task<Product> Create(ProductDto productDto)
@@ -92,10 +92,10 @@ namespace NewJwtLogin.Repos
             await _dbContext.SaveChangesAsync();
         }
 
-        Task<IEnumerable<ProductDto>> IProductRepository.GetAllAsync()
+       /* Task<IEnumerable<ProductDto>> IProductRepository.GetAllAsync()
         {
             throw new NotImplementedException();
-        }
+        }*/
 
         /*public Task CreateAsync(ProductDto product)
         {

@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using NETCore.MailKit.Core;
 using NewJwtLogin.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using NewJwtLogin.Services;
+using EmailService = NewJwtLogin.Services.EmailService;
 
 namespace NewJwtLogin.Controllers
 {
@@ -16,15 +19,18 @@ namespace NewJwtLogin.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
         public AuthenticateController(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IEmailService emailService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _emailService = emailService;
         }
         [HttpPost]
         [Route("login")]
@@ -74,6 +80,14 @@ namespace NewJwtLogin.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+
+            // create the email body
+            string body = "<h1>Thank you for registering!</h1>";
+            body += "<p>Your account has been successfully created.</p>";
+
+            // send the email
+            var emailService = new EmailService();
+            emailService.SendEmail(model.Email, "Welcome to our shopping cart application", body);
         }
 
         [HttpPost]
