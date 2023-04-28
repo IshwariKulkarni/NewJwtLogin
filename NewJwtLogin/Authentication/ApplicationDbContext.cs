@@ -15,9 +15,8 @@ namespace NewJwtLogin.Authentication
 
         public DbSet<Category> categories { get; set; }
 
-        public DbSet<Cart> Carts { get; set; }
+        public DbSet<Cart> carts { get; set; }
 
-        public DbSet<CartItem> CartItems { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Category>().HasData(

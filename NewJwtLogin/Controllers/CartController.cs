@@ -1,48 +1,52 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NewJwtLogin.Authentication;
-using NewJwtLogin.Models;
+using NewJwtLogin.Dto;
 using NewJwtLogin.Repos;
-using System.Data;
+
 
 namespace NewJwtLogin.Controllers
 {
-    [Authorize(Roles = UserRoles.User)]
     [Route("api/[controller]")]
     [ApiController]
-    public class CartController : ControllerBase
+    [Authorize]
+    public class AddtoCartController : ControllerBase
     {
-        private readonly CartRepository _cartRepository;
+        private readonly ICartRepo _cartRepository;
 
-        public CartController()
+        public AddtoCartController(ICartRepo cartRepository)
         {
-            _cartRepository = new CartRepository();
+            _cartRepository = cartRepository;
         }
 
-        [HttpPost("{cartId}/items")]
-        public IActionResult AddToCart(int cartId, [FromBody] CartItem item)
+        [HttpPost("name")]
+        //[Authorize]
+        public async Task<IActionResult> addtoCart([FromBody] CartDto cart)
         {
-            _cartRepository.AddToCart(cartId, item);
-            return Ok();
-        }
-
-        [HttpDelete("{cartId}/items/{itemId}")]
-        public IActionResult RemoveFromCart(int cartId, int itemId)
-        {
-            _cartRepository.RemoveFromCart(cartId, itemId);
-            return Ok();
-        }
-
-        [HttpGet("{cartId}")]
-        public IActionResult GetCart(int cartId)
-        {
-            var cart = _cartRepository.GetCart(cartId);
-            if (cart == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest(ModelState);
             }
-            return Ok(cart);
+
+            var result = await _cartRepository.addtoCart(cart);
+
+            if (result.IsSuccessful)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(result.ErrorMessage);
+            }
         }
+
+        //[HttpDelete("{id}")]
+        ////[Authorize]
+        //public async Task<ActionResult> RemoveCart(int id)
+        //{
+        //    await _cartRepository.RemoveCart(id);
+        //    return NoContent();
+        //}
     }
 }
+

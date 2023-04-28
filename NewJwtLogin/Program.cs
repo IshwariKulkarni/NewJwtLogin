@@ -8,6 +8,7 @@ using NETCore.MailKit.Infrastructure.Internal;
 using NewJwtLogin.Authentication;
 using NewJwtLogin.Repos;
 using System.Text;
+using static NewJwtLogin.Repos.CartRepo;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -25,6 +26,7 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ConnStr")));
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICartRepo, CartRepo>();
 
 // For Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()

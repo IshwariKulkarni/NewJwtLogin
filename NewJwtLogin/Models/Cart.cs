@@ -1,14 +1,18 @@
-﻿namespace NewJwtLogin.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NewJwtLogin.Models
 {
     public class Cart
     {
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public List<CartItem> Items { get; set; }
+        //primary key
+        [Key]
+        public int CartId { get; set; }
 
-        public Cart()
-        {
-            Items = new List<CartItem>();
-        }
+        //foreign key
+        public string Email { get; set; }
+        public string Username { get; set; }
+        public string Product_Name { get; set; }
+        public decimal TotalPrice { get; set; }
+        public int Quantity { get; set; }
     }
 }

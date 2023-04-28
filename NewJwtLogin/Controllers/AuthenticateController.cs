@@ -7,8 +7,7 @@ using NewJwtLogin.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using NewJwtLogin.Services;
-using EmailService = NewJwtLogin.Services.EmailService;
+
 
 namespace NewJwtLogin.Controllers
 {
@@ -81,13 +80,7 @@ namespace NewJwtLogin.Controllers
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
 
-            // create the email body
-            string body = "<h1>Thank you for registering!</h1>";
-            body += "<p>Your account has been successfully created.</p>";
-
-            // send the email
-            var emailService = new EmailService();
-            emailService.SendEmail(model.Email, "Welcome to our shopping cart application", body);
+       
         }
 
         [HttpPost]
