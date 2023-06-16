@@ -21,20 +21,20 @@ namespace NewJwtLogin.Controllers
             _productRepository = productRepository;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllProducts")]
         public async Task<List<Product>> GetAll()
         {
             return await _productRepository.GetAllAsync();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetProductById/{id}")]
         [Authorize(Roles = UserRoles.Admin)]
         public async Task<Product> GetById(int id)
         {
             return await _productRepository.GetProductById(id);
         }
 
-        [HttpPost]
+        [HttpPost("AddProduct")]
         [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> Create(ProductDto product)
         {
@@ -42,7 +42,7 @@ namespace NewJwtLogin.Controllers
             return Ok();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("UpdateProduct/{id}")]
         [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> UpdateProduct(int id, ProductDto product)
         {
@@ -55,7 +55,7 @@ namespace NewJwtLogin.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteProduct/{id}")]
         [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
